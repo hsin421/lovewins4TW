@@ -39,7 +39,7 @@ export default class ChPages extends React.Component {
             <Row>
               <Col md="2">
                 <Link to="/">
-                  <img src={logo} className={styles.appBarLogo}/>
+                  <img src={'https://scontent-lga3-1.xx.fbcdn.net/t31.0-8/15259269_10210124408658721_4092516313725646947_o.jpg'} className={styles.appBarLogo}/>
                 </Link>
                 <span 
                   className={styles.hamburger}
@@ -48,38 +48,14 @@ export default class ChPages extends React.Component {
                   ☰
                 </span>
               </Col>
-              <Col md="7" className={styles.appBarNav}>
-                <Link to="/schedule" className={styles.navLink} activeClassName={styles.navLinkSelected}>活動流程</Link>
-                <Link to="/speakers" className={styles.navLink} activeClassName={styles.navLinkSelected}>講者介紹</Link>
-                <Link to="/staff" className={styles.navLink} activeClassName={styles.navLinkSelected}>工作人員</Link>
-                <a href="https://www.generosity.com/volunteer-fundraising/g0v-at-nyc-first-ever-hackathon" 
-                  target="_blank">
-                  <Button color="accent" className={styles.navButton}>捐款</Button>
-                </a> 
-                <a href="https://www.eventbrite.com/e/g0v-hackathon-nyc-tickets-27621197746" 
-                  target="_blank">
-                  <Button color="primary" className={styles.navButton}>報名</Button>
-                </a>
-              </Col>
-              <Col md="3" className={styles.appBarExtra}>
-                <Link className={styles.langLink} to="/en">ENGLISH</Link>
-                <a className={styles.socialIcon} href="https://www.facebook.com/g0vus/" target="_blank"><img src={socialFacebook} /></a>
-                <a className={styles.socialIcon} href="https://github.com/hsin421/g0vnyc-landing" target="_blank"><img src={socialGithub} /></a>
-              </Col>
             </Row>
           </div>
         </Appbar>
         {
           this.state.showMenu &&
           <ul className={styles.dropDownUl}>
-            <li className={styles.headerItemResponsive}><Link to="/" onClick={this.handleHamburgerClick}>首頁</Link> </li>
-            <li className={styles.headerItemResponsive}><Link to="/schedule" onClick={this.handleHamburgerClick}>活動流程</Link> </li>
-            <li className={styles.headerItemResponsive}><Link to="/speakers" onClick={this.handleHamburgerClick}>講者介紹</Link> </li>
-            <li className={styles.headerItemResponsive}><Link to="/staff" onClick={this.handleHamburgerClick}>工作人員</Link> </li>
-            <li className={styles.headerItemResponsive}><Link to="/en" onClick={this.handleHamburgerClick}>ENGLISH</Link> </li>
             <li className={styles.headerItemResponsive}>
-              <a className={styles.socialIcon} href="https://www.facebook.com/g0vus/" target="_blank"><img src={socialFacebook} /></a>
-              <a className={styles.socialIcon} href="https://github.com/hsin421/g0vnyc-landing" target="_blank"><img src={socialGithub} /></a>
+              <a className={styles.socialIcon} href="https://github.com/hsin421/g0vnyc-landing" target="_blank">看地圖</a>
             </li>
           </ul>
         }

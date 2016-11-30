@@ -1,5 +1,5 @@
 {
-  "name": "demo1",
+  "name": "g0v-marriage-equality",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,13 +17,23 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "classnames": "^2.2.5",
     "css-loader": "^0.23.1",
+    "cx": "0.0.10-beta",
+    "express": "^4.14.0",
     "file-loader": "^0.9.0",
-    "url-loader": "0.5.7",
+    "google-map-react": "^0.21.5",
+    "immutable": "^3.8.1",
     "muicss": "^0.8.0",
     "react": "^15.3.1",
+    "react-controllables": "^0.6.0",
     "react-dom": "^15.3.1",
+    "react-pure-render": "^1.0.2",
     "react-router": "2.5.2",
-    "style-loader": "^0.13.0"
+    "react-s3-uploader": "^3.3.0",
+    "redux": "^3.6.0",
+    "style-loader": "^0.13.0",
+    "url-loader": "0.5.7"
   }
 }

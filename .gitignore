@@ -7,3 +7,7 @@ build/bundle.js
 
 #client
 app
+
+#crt
+*.crt
+*.key

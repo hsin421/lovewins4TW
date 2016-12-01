@@ -9,5 +9,4 @@ build/bundle.js
 app
 
 #crt
-*.crt
-*.key
+crt/

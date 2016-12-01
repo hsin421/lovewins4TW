@@ -39,7 +39,7 @@ export default class ChPages extends React.Component {
             <Row>
               <Col md="2">
                 <Link to="/">
-                  <img src={'https://scontent-lga3-1.xx.fbcdn.net/t31.0-8/15259269_10210124408658721_4092516313725646947_o.jpg'} className={styles.appBarLogo}/>
+                  <img src={'https://media.giphy.com/media/niEaT9ppHmnkI/giphy.gif'} className={styles.appBarLogo}/>
                 </Link>
                 <span 
                   className={styles.hamburger}
@@ -48,15 +48,20 @@ export default class ChPages extends React.Component {
                   ☰
                 </span>
               </Col>
+              <Col md="7" className={styles.appBarNav}>
+                <a href="https://g0v.hackpad.com/Overseas-Taiwanese-support-amendments-to-Civil-Code-and-uphold-marriage-equality-w1mMW7wbzsu" className={styles.navLink}>活動文案</a>
+                <a href="https://g0v.hackpad.com/press-releaseOverseas-Taiwanese-support-amendments-to-Civil-Code--PbUfN8xqVCG" className={styles.navLink}>新聞稿</a>
+                <a href="localhost:3000" className={styles.navLink} >串聯地圖</a>
+              </Col>
             </Row>
           </div>
         </Appbar>
         {
           this.state.showMenu &&
           <ul className={styles.dropDownUl}>
-            <li className={styles.headerItemResponsive}>
-              <a className={styles.socialIcon} href="https://github.com/hsin421/g0vnyc-landing" target="_blank">看地圖</a>
-            </li>
+             <a href="https://g0v.hackpad.com/Overseas-Taiwanese-support-amendments-to-Civil-Code-and-uphold-marriage-equality-w1mMW7wbzsu" className={styles.headerItemResponsive}>活動文案</a>
+              <a herf="https://g0v.hackpad.com/press-releaseOverseas-Taiwanese-support-amendments-to-Civil-Code--PbUfN8xqVCG" className={styles.headerItemResponsive}>新聞稿</a>
+              <a href="localhost:3000" className={styles.headerItemResponsive} >串聯地圖</a>
           </ul>
         }
        	{children}

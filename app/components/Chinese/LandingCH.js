@@ -47,28 +47,32 @@ export default class LandingCH extends React.Component {
 
   _onSave = (event) => {
     event.preventDefault();
+    if (this.state.name && this.state.location) {
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => { 
-        this.setState({ hasCompleted: true });
-        axios.post('https://5bq2v7mgi5.execute-api.us-east-1.amazonaws.com/prod/mySimpleBE', {
-          "Item": { 
-            ...this.state,
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          },
-          "TableName": "ME-TW"
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => { 
+          this.setState({ hasCompleted: true });
+          axios.post('https://5bq2v7mgi5.execute-api.us-east-1.amazonaws.com/prod/mySimpleBE', {
+            "Item": { 
+              ...this.state,
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            },
+            "TableName": "ME-TW"
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    
         })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-  
-      })
+      } else {
+        alert('We were unable to get your position and check you in at this time :(');
+      }
     } else {
-      alert('We were unable to get your position and check you in at this time :(');
+      alert('Please enter your name and location. ')
     }
   }
 
@@ -83,7 +87,7 @@ export default class LandingCH extends React.Component {
               {this.state.hasCompleted ? 
                 ( <div style={{ height: 400 }}>
                     <h2> Thank you for your support! </h2>
-                    <p> See who else stands with you around the world </p>
+                    <p> See who else stands with you <a href="http://map.marriageforall.org/map/main">around the world</a><img src="http://www.iconarchive.com/download/i87619/icons8/ios7/Arrows-Right.ico" width={20} /> </p>
                   </div>)
                 :
                 (
@@ -97,7 +101,7 @@ export default class LandingCH extends React.Component {
                     <Input hint="New York City" onChange={this._onChangeLocation} />
                   </Col>
                   <Col md="5" md-offset="4">
-                    <legend><h6 className={styles.formtext}>Upload a picture</h6></legend>
+                    <legend><h6 className={styles.formtext}>Take a picture of you holding <a href="https://drive.google.com/file/d/0B98-mdnKh8yRR3R4S0l0eTBHX1U/view" target="_blank">supporting signs</a>!</h6></legend>
                     <ReactS3Uploader
                       signingUrl="https://me-tw-s3-server.herokuapp.com/s3/sign"
                       accept="image/*"
@@ -112,7 +116,8 @@ export default class LandingCH extends React.Component {
                   </Col>
                   <Col md="5" md-offset="4">
                     <Button className={styles.heroBtn} variant="raised" onClick={this._onSave}>Check In</Button>
-                    <p> After clicking check-in, you'll be asked to permit sharing your location. </p>
+                    <p> After clicking check-in, you'll be asked to permit sharing your location. We will only use your approximate location. </p>
+                    <p> Turn on location service on your phone if nothing happens after clicking XD </p>
                   </Col>
                   </Form>)
                 }

@@ -3,6 +3,7 @@ import React from 'react';
 import Appbar from 'muicss/lib/react/appbar';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
+import Divider from 'muicss/lib/react/divider';
 import { Link } from 'react-router';
 import Button from 'muicss/lib/react/button';
 import styles from '../../styles.css';
@@ -83,15 +84,16 @@ export default class ChPages extends React.Component {
           </ul>
         }
        	{children}
-          <Appbar className={styles.footer}>
-             <Container>
-              <Row>
-                <Col md="12">
-                  <img src={logoDark} height="20px" className={styles.footerLogo}/>
-                </Col>
-              </Row>
-            </Container>
-          </Appbar>
+        <Divider />
+          {/*<Appbar className={styles.footer}>
+                       <Container>
+                        <Row>
+                          <Col md="12">
+                            <img src={logoDark} height="20px" className={styles.footerLogo}/>
+                          </Col>
+                        </Row>
+                      </Container>
+                    </Appbar>*/}
       </div>
     );
   }

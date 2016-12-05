@@ -13,8 +13,10 @@ import { Link } from 'react-router';
 
 import styles from '../../styles.css';
 import ReactS3Uploader from 'react-s3-uploader';
+import S3Uploader from 'react-s3-uploader/s3upload';
 import uuid from 'uuid/v1';
 import axios from 'axios';
+import loadingGif from '../../images/loading.gif';
 
 export default class LandingCH extends React.Component {
   constructor(prop, context) {
@@ -25,8 +27,28 @@ export default class LandingCH extends React.Component {
       location: null,
       imgUrl: null,
       comment: null,
+      isUsingProfilePic: false,
       timestamp: new Date().getTime()
     };
+
+    this.fileObjectUrl = '';
+  }
+
+  componentDidMount() {
+    setInterval(() => {
+      if (window.USER_IMAGE_PROCESSED_FILE && !this.state.isUsingProfilePic) {
+        const myFile = window.USER_IMAGE_PROCESSED_FILE;
+        this.fileObjectUrl = window.URL.createObjectURL(myFile);
+        this.setState({ isUsingProfilePic: true });
+        const S3Upload = new S3Uploader({
+            signingUrl: "https://me-tw-s3-server.herokuapp.com/s3/sign",
+            onFinishS3Put: this._handleUploadFinish,
+            uploadRequestHeaders: { 'x-amz-acl': 'public-read' },
+            contentDisposition: "auto"
+        });
+        S3Upload.uploadFile(myFile);
+      }
+    }, 1000)
   }
 
   _onChangeName = (event) => {
@@ -42,13 +64,31 @@ export default class LandingCH extends React.Component {
   }
 
   _handleUploadFinish = (uploadResult) => {
-    this.setState({imgUrl: `https://me-tw-s3-server.herokuapp.com${uploadResult.publicUrl}`})
+    const imgUrl = `https://me-tw-s3-server.herokuapp.com${uploadResult.publicUrl}`;
+    this.setState({ imgUrl });
+  }
+
+  _handlePreprocess = (file, next) => {
+    const fr = new FileReader();
+    const createImage = () => {
+      var img = new Image();
+      img.src = fr.result;
+      window.S3_USER_IMAGE_UPLOAD = img;
+    }
+    fr.onload = createImage;
+    fr.readAsDataURL(file);
+    next(file);
   }
 
   _onSave = (event) => {
     event.preventDefault();
     if (this.state.name && this.state.location) {
-
+      this.setState({ isStartSaving: true });
+      setTimeout(() => {
+        if (!this.state.isSuccess) {
+          alert('Oops, something went wrong. Please turn on your location in privacy setting and refresh to try again :(')
+        }
+      }, 6000);
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => { 
           this.setState({ hasCompleted: true });
@@ -60,8 +100,10 @@ export default class LandingCH extends React.Component {
             },
             "TableName": "ME-TW"
           })
-          .then(function (response) {
-            console.log(response);
+          .then((response) => {
+            if (response.status === 200) {
+              this.setState({ isSuccess: true });
+            }
           })
           .catch(function (error) {
             console.log(error);
@@ -83,7 +125,7 @@ export default class LandingCH extends React.Component {
         <Container className={styles.landingBody}>
         	<Row>
 	           <Col md="8" md-offset="2">
-              <h1> Check In Your Voice</h1>
+              <h1 id="check-in"> Check In Your Voice</h1>
               {this.state.hasCompleted ? 
                 ( <div style={{ height: 400 }}>
                     <h2> Thank you for your support! </h2>
@@ -100,22 +142,38 @@ export default class LandingCH extends React.Component {
                     <legend><h6 className={styles.formtext}>Location</h6></legend>
                     <Input hint="New York City" onChange={this._onChangeLocation} />
                   </Col>
-                  <Col md="5" md-offset="4">
-                    <legend><h6 className={styles.formtext}>Take a picture of you holding <a href="https://drive.google.com/file/d/0B98-mdnKh8yRR3R4S0l0eTBHX1U/view" target="_blank">supporting signs</a>!</h6></legend>
-                    <ReactS3Uploader
-                      signingUrl="https://me-tw-s3-server.herokuapp.com/s3/sign"
-                      accept="image/*"
-                      onFinish={this._handleUploadFinish}
-                      uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}
-                      contentDisposition="auto"
-                    />
+                  <Col md="8" md-offset="2">
+                    <legend>
+                      <h2> Show Your Support </h2>
+                      <h6 className={styles.formtext}>Use our <a href="#content"> profile generator 大頭貼產生器</a> 
+                      <br /> Or upload/take a picture of yourself holding <a href="https://drive.google.com/file/d/0B98-mdnKh8yRR3R4S0l0eTBHX1U/view" target="_blank">supporting signs</a>!
+                      </h6>
+                    </legend>
+                    {this.state.isUsingProfilePic ?
+                      <img src={this.fileObjectUrl} width="50%" />
+                      :
+                      <ReactS3Uploader
+                        style={{marginLeft: '30%'}}
+                        signingUrl="https://me-tw-s3-server.herokuapp.com/s3/sign"
+                        accept="image/*"
+                        onFinish={this._handleUploadFinish}
+                        preprocess={this._handlePreprocess}
+                        uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}
+                        contentDisposition="auto"
+                      />
+                    }
+                    {(this.state.imgUrl && !this.state.isUsingProfilePic) && <img src={this.state.imgUrl} width="50%" />}
                   </Col>
                   <Col md="10" md-offset="1">
-                    <legend><h6 className={styles.formtext}>Comment</h6></legend>
+                    <legend><h6 className={styles.formtext} style={{marginTop: 50}}>Comment</h6></legend>
                     <Textarea hint="Love is equal. Equal is love." onChange={this._onChangeComment} />
                   </Col>
                   <Col md="5" md-offset="4">
-                    <Button className={styles.heroBtn} variant="raised" onClick={this._onSave}>Check In</Button>
+                    {!this.state.isStartSaving ?
+                      <Button className={styles.heroBtn} variant="raised" onClick={this._onSave}>Check In</Button>
+                      :
+                      <img src={loadingGif} width="20%" />
+                    }
                     <p> After clicking check-in, you'll be asked to permit sharing your location. We will only use your approximate location. </p>
                     <p> Turn on location service on your phone if nothing happens after clicking XD </p>
                   </Col>

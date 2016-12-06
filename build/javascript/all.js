@@ -118,61 +118,61 @@ $(document).ready(function()
 
 function createImage(template,source,x,y,w,h){
   var cover = new Image();
-  var templateData = $(`#template${template}`).val()
-  cover.src = templateData;
-  // cover.src = 'images/object/' + template + '.png';
-
+  cover.src = 'images/object/' + template + '.png';
+  console.log(cover);
   var userimage = new Image();
   userimage.src = source;
+  $('#loadingGif2').show();
+  setTimeout(() => {
+    var resize_canvas = document.getElementById("result");
+    resize_canvas.width = 500;
+    resize_canvas.height = 500;
 
+    var ctx = resize_canvas.getContext("2d");
+    ctx.rect(0,0,500,500);
+    ctx.fillStyle="rgba(255, 255, 255, 0)";
+    ctx.fill();
+    if (window.USER_IMAGE_ROTATED) {
+      ctx.translate(500, 0);
+      ctx.rotate(90 * Math.PI/180);
+      ctx.drawImage(userimage,x,y,w,h);
+      ctx.translate(500, 0);
+      ctx.rotate(90 * Math.PI/180);
+      ctx.translate(500, 0);
+      ctx.rotate(90 * Math.PI/180);
+      ctx.translate(500, 0);
+      ctx.rotate(90 * Math.PI/180);
+      ctx.drawImage(cover,0,0,500,500);
+    } else {
+      ctx.drawImage(userimage,x,y,w,h);
+      ctx.drawImage(cover,0,0,500,500);
+    }
 
-  var resize_canvas = document.getElementById("result");
-  resize_canvas.width = 500;
-  resize_canvas.height = 500;
+    var base64 = resize_canvas.toDataURL("image/png");
 
-  var ctx = resize_canvas.getContext("2d");
-  ctx.rect(0,0,500,500);
-  ctx.fillStyle="rgba(255, 255, 255, 0)";
-  ctx.fill();
-  if (window.USER_IMAGE_ROTATED) {
-    ctx.translate(500, 0);
-    ctx.rotate(90 * Math.PI/180);
-    ctx.drawImage(userimage,x,y,w,h);
-    ctx.translate(500, 0);
-    ctx.rotate(90 * Math.PI/180);
-    ctx.translate(500, 0);
-    ctx.rotate(90 * Math.PI/180);
-    ctx.translate(500, 0);
-    ctx.rotate(90 * Math.PI/180);
-    ctx.drawImage(cover,0,0,500,500);
-  } else {
-    ctx.drawImage(userimage,x,y,w,h);
-    ctx.drawImage(cover,0,0,500,500, 0, 0, 500, 500);
-  }
+    resize_canvas.toBlob(function(blob) {
+      var fileFromBlob = new File([blob], 'lovewins4tw.png');
+      window.USER_IMAGE_PROCESSED_FILE = fileFromBlob;
+    });
 
-  var base64 = resize_canvas.toDataURL("image/png");
-
-  resize_canvas.toBlob(function(blob) {
-    var fileFromBlob = new File([blob], 'lovewins4tw.png');
-    window.USER_IMAGE_PROCESSED_FILE = fileFromBlob;
-  });
-
-  // check ie or not
-  var ua = window.navigator.userAgent;
-  var msie = ua.indexOf("MSIE ");
-  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
-    var html="<p>請按右鍵另存圖片</p>";
-    html+="<img src='"+base64+"' alt='10'/>";
-    var tab=window.open();
-    tab.document.write(html);
-  }
-  else{
-    $('#download').attr('href',base64);
-    $('#download').show();
-    // $('#download')[0].click();
-  }
-  $('#normalSubmit').hide();
-  $('#submitComplete').show();
+    // check ie or not
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+      var html="<p>請按右鍵另存圖片</p>";
+      html+="<img src='"+base64+"' alt='10'/>";
+      var tab=window.open();
+      tab.document.write(html);
+    }
+    else{
+      $('#download').attr('href',base64);
+      $('#download').show();
+      // $('#download')[0].click();
+    }
+    $('#normalSubmit').hide();
+    $('#loadingGif2').hide();
+    $('#submitComplete').show();
+  }, 1200)
 }
 
 //uploader

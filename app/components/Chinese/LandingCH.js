@@ -127,7 +127,7 @@ export default class LandingCH extends React.Component {
 	           <Col md="8" md-offset="2">
               <h1 id="check-in"> Check In Your Voice</h1>
               {this.state.hasCompleted ? 
-                ( <div style={{ height: 400 }}>
+                ( <div style={{ height: 900 }}>
                     <h2> Thank you for your support! </h2>
                     <p> See who else stands with you <a href="http://map.marriageforall.org/map/main">around the world</a><img src="http://www.iconarchive.com/download/i87619/icons8/ios7/Arrows-Right.ico" width={20} /> </p>
                   </div>)
